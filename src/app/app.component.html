@@ -1,0 +1,41 @@
+<mat-toolbar color="primary">
+  Todo List
+</mat-toolbar>
+<div class="main-div">
+  <mat-form-field appearance="outline">
+    <mat-label>New Task</mat-label>
+    <input matInput [(ngModel)]="newTaskTitle" (keyup.enter)="addTask()" placeholder="Add a new task">
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="addTask()" [ngClass]="'button'">Add Task</button>
+</div>
+<div class="search-div">
+  <mat-form-field appearance="outline">
+    <mat-label>Search</mat-label>
+    <input matInput [(ngModel)]="searchTerm" (input)="applyFilter()" placeholder="Search tasks">
+  </mat-form-field>
+</div>
+<mat-card class="list-div">
+  <div class="tab-container">
+    <button mat-button class="tab-button" (click)="setFilter('all')" [ngClass]="{'active': filter === 'all'}">All</button>
+    <button mat-button class="tab-button" (click)="setFilter('completed')" [ngClass]="{'active': filter === 'completed'}">Completed</button>
+    <button mat-button class="tab-button" (click)="setFilter('incomplete')" [ngClass]="{'active': filter === 'incomplete'}">Incomplete</button>
+  </div>
+  <mat-list>
+    <mat-list-item *ngFor="let task of filteredTasks">
+      <div class="task-container">
+        <div class="checkbox-container">
+          <mat-checkbox [(ngModel)]="task.completed" (change)="toggleTaskCompletion(task, $event)"></mat-checkbox>
+        </div>
+        <div class="title-container">
+          <span [class.completed]="task.completed" *ngIf="!task.editing" (dblclick)="editTask(task)">{{ task.title }}</span>
+          <input matInput [(ngModel)]="task.title" (keyup.enter)="updateTask(task, task.title)" (blur)="cancelEdit(task)" *ngIf="task.editing"/>
+        </div>
+        <div class="delete-container">
+          <button mat-icon-button (click)="deleteTask(task)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-list-item>
+  </mat-list>
+</mat-card>
